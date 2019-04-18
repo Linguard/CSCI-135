@@ -1,0 +1,13 @@
+cd		//change directory
+
+cd Lab\ Quiz	//use the backslash to make the terminal aware of the space between lab and quiz. 			  Otherwise it will only process lab
+
+press [up] and [down] key to cycle through the previous commands on the terminal
+
+press [Tab] to auto complete commands
+
+mkdir		//makes directory
+mkdir a\ e	//makes directory named a e
+mkdir a\ \ \ e	//makes directory named a   e
+mkdir file ups	//makes two directories named file and ups
+
