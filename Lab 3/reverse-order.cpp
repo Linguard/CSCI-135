@@ -1,8 +1,10 @@
 /*
 Name: Saqibul Chowdhury
 CSCI 136
-Instructor: Anoop Aroor
 Lab 3D
+Instructor: Anoop Aroor
+This program asks the user to input two dates (earlier date then later date). The program then reports 
+the West basin elevation for all days in the interval in the reverse chronological order.
 */
 
 #include <iostream>
@@ -14,46 +16,43 @@ using namespace std;
 
 int main()
 {
-	int x = 0;
-	string date = " ", input1 = " ", input2 = " ";
+	string date= " ";
+	string input1 = " ", input2 = " ";
+	
+	int i = 0,x = 0;
+	
 	double eastSt = 0, eastEl = 0, westSt = 0, westEl = 0;
-
-	const int CAPACITY = 365;		//Creating an array called array with 365 spaces
+	
+	const int CAPACITY = 365;
 	double values[CAPACITY];
 	string dates[CAPACITY];
-	int size = 0;
-	double input;
 
-	ifstream reservoir("Current_Reservoir_Levels.tsv");
-	if (reservoir.fail())	{
+	ifstream fin("Current_Reservoir_Levels.tsv");
+	if (fin.fail()) {
 		cerr << "File cannot be opened for reading." << endl;
-		exit(1); //exit if failed to open the file
+		exit(1); // exit if failed to open the file
 	}
 
+	string junk;        // new string variable
+	getline(fin, junk); // read one line from the file and discard it
+	
 	cout << "Enter earlier date: ";
 	cin >> input1;
-
 	cout << "Enter later date: ";
 	cin >> input2;
-
 	cout << endl;
 
-	string junk;			//new string variable
-	getline(reservoir, junk);	//read one line from the file and discare it
-
-	while(reservoir >> date >> eastSt >> eastEl >> westSt >> westEl)	{
-		if (date >= input1 && date <= input2)	{
-			if (size < CAPACITY)	{
-				values[size] = westEl;
-				dates[size] = date;
-				size++;
+	while(fin >> date >> eastSt >> eastEl >> westSt >> westEl) {	// this loop reads the file line-by-line extracting 5 values on each iteration 
+		if (date >= input1 and date <= input2) {
+			if (i < CAPACITY)	{
+			values[i] = westEl;
+			dates[i] = date;
+			i++;
 			}
 		}
 	}
-	for (x = size; x >= 0; x = (x-1))	{
-
+	
+	for (x = i; x >= 0; x = (x-1))	{
 		cout << dates[x] << "  " << values[x] << " ft" << endl;
-
 	}
-	reservoir.close();
 }
