@@ -36,6 +36,8 @@ public:
 struct Post{
 	string username;
 	string message;
+        Post(string usrn, string msg);
+        Post();
 };
 
 class Network {
@@ -101,6 +103,18 @@ void Profile::setDisplayName(string dspn)
 	displayname = dspn;
 
 	return;
+}
+
+Post::Post(string usrn, string msg)	// Post Constructor
+{
+	username = usrn;
+	message = msg;
+}
+
+Post::Post()
+{
+	username = "";
+	message = "";
 }
 
 Network::Network()				// Network Constructor
