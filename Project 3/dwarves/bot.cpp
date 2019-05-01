@@ -42,6 +42,7 @@ void onStart(int rows, int cols, int num, std::ostream &log)
 
 bool isNextToATree(Dwarf & dwarf, int r, int c);
 int getTreeCount(Dwarf & dwarf, int r, int c);
+void getLocation(Dwarf & dwarf, int maxtree_location[]);
 
 bool isNextToATree(Dwarf & dwarf, int r, int c)
 {
