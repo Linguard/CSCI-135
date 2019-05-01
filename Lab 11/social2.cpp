@@ -10,6 +10,7 @@ Write a program social2.cpp, implementing the first version of the class Network
 
 #include <iostream>
 #include <ctype.h>
+#include <string>
 
 using namespace std;
 
@@ -53,6 +54,12 @@ Profile::Profile(string usrn, string dspn)	// Profile Constructor
 {
 	username = usrn;
 	displayname = dspn;
+}
+
+Profile::Profile()
+{
+	username = "";
+	displayname = "";
 }
 
 string Profile::getUsername()			// Returns the username
@@ -114,7 +121,7 @@ bool Network::addUser(string usrn, string dspn)
 			return false;
 		}
 	}
-	
+
 	for (int i = 0; i <= numUsers; i++)
 	{
 		if (profiles[i].getUsername() == usrn)
@@ -122,8 +129,9 @@ bool Network::addUser(string usrn, string dspn)
 			return false;
 		}
 	}
-	
-	profiles[numUsers] = Profile p1(usrn,dspn);
+
+
+	profiles[numUsers] = Profile(usrn, dspn);
 	numUsers++;
 
 	return true;
