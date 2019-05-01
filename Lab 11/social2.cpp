@@ -9,6 +9,7 @@ Write a program social2.cpp, implementing the first version of the class Network
 */
 
 #include <iostream>
+#include <ctype.h>
 
 using namespace std;
 
@@ -54,7 +55,7 @@ Profile::Profile(string usrn, string dspn)	// Profile Constructor
 	displayname = dspn;
 }
 
-string Profile::getUsername()			// returns the username
+string Profile::getUsername()			// Returns the username
 {
 	return username;
 }
@@ -73,7 +74,7 @@ void Profile::setDisplayName(string dspn)
 	return;
 }
 
-Network::Network()				//Network Constructor
+Network::Network()				// Network Constructor
 {
 	numUsers = 0;
 }
@@ -82,13 +83,52 @@ Network::Network()				//Network Constructor
 // (or -1 if username is not found)
 int Network::findID (string usrn)
 {
-	
+	for (int i = 0; i <= numUsers; i++)
+	{
+		if (profiles[i].getUsername() == usrn)
+		{
+			return i;
+		}
+		else
+		{
+			return -1;
+		}
+	}
 }
 
 bool Network::addUser(string usrn, string dspn)
 {
+	if (usrn == "" or usrn == " ")
+	{
+		return false;
+	}
+	else if (numUsers >= 20)
+	{
+		return false;
+	}
 	
+	for (int i = 0; i < usrn.length(); i++)
+	{
+		if (!(isalnum(usrn[i])))
+		{
+			return false;
+		}
+	}
+	
+	for (int i = 0; i <= numUsers; i++)
+	{
+		if (profiles[i].getUsername() == usrn)
+		{
+			return false;
+		}
+	}
+	
+	profiles[numUsers] = Profile p1(usrn,dspn);
+	numUsers++;
+
+	return true;
 }
+
 int main()
 {
 	Network nw;
@@ -105,4 +145,3 @@ int main()
 
 	cout << nw.addUser("yoshi", "Yoshi") << endl;		// false (0)
 }
-
