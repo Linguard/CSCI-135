@@ -91,7 +91,7 @@ string Profile::getUsername()			// Returns the username
 
 string Profile::getFullName()	// Return name in the format: "displayname (@username)"
 {
-	string name = displayname + " (The second function, printTimeline(usrn) prints out the timeline of the user usrn. The timeline of a user is the list of all posts by the user and by the people they follow, presented in reverse-chronological order. @" + username + ")";
+	string name = displayname + " (@" + username + ")";
 
 	return name;
 }
@@ -250,7 +250,7 @@ int main()
 
 	nw.follow("mario", "luigi");
 	nw.follow("luigi", "mario");
-	nw.follow("luigi", "yoshi");posts[numPosts]
+	nw.follow("luigi", "yoshi");
 	nw.follow("yoshi", "mario");
 
 	// write some posts
