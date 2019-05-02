@@ -76,7 +76,7 @@ string Profile::getUsername()			// Returns the username
 	return username;
 }
 
-string Profile::getFullName()			// Return name in the format: "displayname (@username)"
+string Profile::getFullName()		// Return name in the format: "displayname (@username)"
 {
 	string name = displayname + " (@" + username + ")";
 
@@ -136,6 +136,13 @@ bool Network::addUser(string usrn, string dspn)
 		}
 	}
 
+	if (findID(usrn) != -1)
+	{
+		return false;
+	}
+
+	//The if statement above does the same thing
+	/*
 	for (int i = 0; i <= numUsers; i++)
 	{
 		if (profiles[i].getUsername() == usrn)
@@ -143,6 +150,7 @@ bool Network::addUser(string usrn, string dspn)
 			return false;
 		}
 	}
+	*/
 
 	profiles[numUsers] = Profile(usrn, dspn);
 	numUsers++;
@@ -189,7 +197,8 @@ void Network::printDot()
 		{
 			if (following[i][j] == true)
 			{
-				cout << "\t\"@" << profiles[i].getUsername() << "\" -> \"@" << profiles[j].getUsername() << "\"" << endl;
+				cout << "\t\"@" << profiles[i].getUsername() << "\" -> \"@";
+				cout << profiles[j].getUsername() << "\"" << endl;
 			}
 		}
 	}
