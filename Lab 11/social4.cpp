@@ -5,7 +5,7 @@ Lab Instructor: Anoop Aroor
 Lab 11D
 The three main functionalities of the class Network are:
 1) adding new users to the network, 2) following, and 3) posting messages.
-Write a new program social4.cpp, in which users can follow each other
+Write a new program social4.cpp, in which users can post messages and view their timelines.
 */
 
 #include <iostream>
@@ -215,7 +215,8 @@ void Network::printDot()
 		{
 			if (following[i][j] == true)
 			{
-				cout << "\t\"@" << profiles[i].getUsername() << "\" -> \"@" << profiles[j].getUsername() << "\"" << endl;
+				cout << "\t\"@" << profiles[i].getUsername() << "\" -> \"@";
+				cout << profiles[j].getUsername() << "\"" << endl;
 			}
 		}
 	}
@@ -239,18 +240,22 @@ bool Network::writePost(string usrn, string msg)
 
 /*
 The second function, printTimeline(usrn) prints out the timeline of the user usrn.
-The timeline of a user is the list of all posts by the user and by the people they follow, presented in reverse-chronological order.
+The timeline of a user is the list of all posts by the user and by the people they follow,
+presented in reverse-chronological order.
 */
 bool Network::printTimeline(string usrn)
 {
 	int user1 = findID(usrn);
 
-	for (int i = MAX_POSTS; i >= 0; i--)
+	for (int i = numPosts - 1; i >= 0; i--)
 	{
 		int user2 = findID(posts[i].username);
 
 		if (user1 == user2 or following[user1][user2] == true)
+		{
 			cout << profiles[user2].getFullName() << ": " << posts[i].message;
+			cout << endl;
+		}
 	}
 }
 
