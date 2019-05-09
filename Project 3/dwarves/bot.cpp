@@ -22,6 +22,9 @@ int ROWS;  // global variables
 int COLS;
 int NUM;
 
+int MAX1;
+
+
 struct Lumber{
 	int x;
 	int y;
@@ -127,6 +130,10 @@ int getTreeCount(Dwarf & dwarf, int r, int c)
 		{
 			tree_count++;
 		}
+		else if (dwarf.look(locations[i][0], locations[i][1]) == APPLE_TREE)
+		{
+			tree_count++;
+		}
 	}
 	return tree_count;
 }
@@ -145,7 +152,7 @@ void getLocation(Dwarf & dwarf, int maxtree_location[])
 			if (isNextToATree(dwarf, i, j) == true)
 			{
 				count = getTreeCount(dwarf, i, j);
-				if ( count > maxcount and dwarf.look(i, j) == EMPTY)
+				if (count > maxcount and dwarf.look(i, j) == EMPTY)
 				{
 					maxcount = count;
 					max_location_x = i;
@@ -160,6 +167,7 @@ void getLocation(Dwarf & dwarf, int maxtree_location[])
 	
 	return;
 }
+
 
 bool isFenceOnMap(Dwarf & dwarf)	// Checks for fence on map. Returns true if atleast 1 fence already on map
 {
@@ -193,82 +201,78 @@ void onAction(Dwarf &dwarf, int day, int hours, int minutes, ostream &log)
 	int c = dwarf.col();
 
 	static int first_move = 0;
-	
-	if (dwarf.name() == 5)		//visual studio 
+	static int fence_builder_x = ROWS/2;
+	static int fence_builder_y = COLS/2;
+
+	if (dwarf.name() == 5)
 	{
-		if (first_move == 0)
+		// Initialization and border loops
+		if (r == fence_builder_x && c == fence_builder_y)
 		{
-			if (dwarf.look(ROWS/2, COLS/2) == EMPTY)
-			
-		for (int i = ROWS/2; i < 3*ROWS/2; i++)
+			first_move++;
+		}
+		else if (first_move == 0)
 		{
-			if (dwarf.look(r + 1, c) == PINE_TREE)
-			{
-				// If there is a pine tree, chop it
-				log << "Found a tree -- chop" << endl;
-				dwarf.start_chop(SOUTH);
-				return;
-			}
-			else if (dwarf.look(r + 1, c) == EMPTY)
-			{
-				log << "Build a fence" << endl;
-				dwarf.start_build(SOUTH);
-				return;
-			}
-			else if (dwarf.look(r + 1, c) == FENCE)
-			{
-				dwarf.start_walk(r+1, c);
-				return;
-			}
+			log << "Walk to " << fence_builder_x << " " << fence_builder_y << endl;
+			dwarf.start_walk(fence_builder_x, fence_builder_y);
+			return;
+		}
+		else if (c == COLS - 1)
+		{
+			log << "Walk to " << r + 2 << " " << fence_builder_y << endl;
+			dwarf.start_walk(r + 2, fence_builder_y);
+			return;
+		}
+
+		// Actual task loop
+		if (dwarf.look(r, c - 1) == PINE_TREE or dwarf.look(r, c - 1) == APPLE_TREE)
+		{
+			// If there is a pine tree, chop it
+			log << "Found a tree -- chop" << endl;
+			dwarf.start_chop(WEST);
+			return;
+		}
+		else if (dwarf.look(r - 1, c) == PINE_TREE or dwarf.look(r - 1, c) == APPLE_TREE)
+		{
+			// If there is a pine tree, chop it
+			log << "Found a tree -- chop" << endl;
+			dwarf.start_chop(NORTH);
+			return;
+		}
+		else if (dwarf.look(r - 1, c) == EMPTY)
+		{
+			log << "Build a fence" << endl;
+			dwarf.start_build(NORTH);
+			return;
+		}
+		else if (dwarf.look(r, c - 1) == EMPTY)
+		{
+			log << "Build a fence" << endl;
+			dwarf.start_build(WEST);
+			return;
+		}
+		else if (dwarf.look(r, c + 1) == PINE_TREE or dwarf.look(r, c + 1) == APPLE_TREE)
+		{
+			// If there is a pine tree, chop it
+			log << "Found a tree -- chop" << endl;
+			dwarf.start_chop(EAST);
+			return;
+		}
+		else if (dwarf.look(r, c + 1) == EMPTY)
+		{
+			log << "Walk to " << r << " " << c + 1 << endl;
+			dwarf.start_walk(r, c + 1);
+			return;
+		}
+		else
+		{
+			return;
 		}
 	}
-		/*	if (dwarf.look(r, c + 1) == PINE_TREE)
-			{
-				// If there is a pine tree, chop it
-				log << "Found a tree -- chop" << endl;
-				dwarf.start_chop(EAST);
-				return;
-			}
-			// Look if there is a tree on the left of the dwarf
-			else if (dwarf.look(r, c - 1) == PINE_TREE)
-			{
-				// If there is a pine tree, chop it
-				log << "Found a tree -- chop" << endl;
-				dwarf.start_chop(WEST);
-				return;
-			}
-			// Look if there is a tree below the dwarf
-			else if (dwarf.look(r + 1, c) == PINE_TREE)
-			{
-				// If there is a pine tree, chop it
-				log << "Found a tree -- chop" << endl;
-				dwarf.start_chop(SOUTH);
-				return;
-			}
-			else if (dwarf.look(r, c + 1) == EMPTY)
-			{
-				log << "Build a fence" << endl;
-				dwarf.start_build(EAST);
-				return;
-			}
-		
-			else if (dwarf.look(r, c - 1) == EMPTY)
-			{
-				log << "Build a fence" << endl;
-				dwarf.start_build(WEST);
-				return;
-			}
-			else if (dwarf.look(r + 1, c) == EMPTY)
-			{
-				log << "Build a fence" << endl;
-				dwarf.start_build(SOUTH);
-				return;
-			}
-		*/
 
-		
+
 	// Look if there is a tree on the right of the dwarf
-	if (dwarf.look(r, c + 1) == PINE_TREE)
+	if (dwarf.look(r, c + 1) == PINE_TREE or dwarf.look(r, c + 1) == APPLE_TREE)
 	{
 		// If there is a pine tree, chop it
 		log << "Found a tree -- chop" << endl;
@@ -276,7 +280,7 @@ void onAction(Dwarf &dwarf, int day, int hours, int minutes, ostream &log)
 		return;
 	}
 	// Look if there is a tree on the left of the dwarf
-	else if (dwarf.look(r, c - 1) == PINE_TREE)
+	else if (dwarf.look(r, c - 1) == PINE_TREE or dwarf.look(r, c - 1) == APPLE_TREE)
 	{
 		// If there is a pine tree, chop it
 		log << "Found a tree -- chop" << endl;
@@ -284,7 +288,7 @@ void onAction(Dwarf &dwarf, int day, int hours, int minutes, ostream &log)
 		return;
 	}
 	// Look if there is a tree below the dwarf
-	else if (dwarf.look(r + 1, c) == PINE_TREE)
+	else if (dwarf.look(r + 1, c) == PINE_TREE or dwarf.look(r + 1, c) == APPLE_TREE)
 	{
 		// If there is a pine tree, chop it
 		log << "Found a tree -- chop" << endl;
@@ -292,7 +296,7 @@ void onAction(Dwarf &dwarf, int day, int hours, int minutes, ostream &log)
 		return;
 	}
 	// Look if there is a tree above the dwarf
-	else if (dwarf.look(r - 1, c) == PINE_TREE)
+	else if (dwarf.look(r - 1, c) == PINE_TREE or dwarf.look(r - 1, c) == APPLE_TREE)
 	{
 		// If there is a pine tree, chop it
 		log << "Found a tree -- chop" << endl;
@@ -301,9 +305,9 @@ void onAction(Dwarf &dwarf, int day, int hours, int minutes, ostream &log)
 	}
 
 	int maxtree_location[2] = {-1, -1};
-	
+
 	getLocation(dwarf, maxtree_location);
-	
+
 	log << "Walk to " << maxtree_location[0] << " " << maxtree_location[1] << endl;
 	dwarf.start_walk(maxtree_location[0], maxtree_location[1]);
 	return;
