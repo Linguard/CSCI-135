@@ -16,11 +16,11 @@ bool isDivisibleBy(int n, int d);		//Check whether 1st number is divisible by th
 
 bool isDivisibleBy(int n, int d)
 {
-	if (d == 0)				//Special case: N can not be divided by zero
+	if (d == 0)				//Special case: n can not be divided by zero
 	{
 		return false;
 	}
-	else if (n%d == 0)			//If N is divisible by zero, return true
+	else if (n%d == 0)			//If N is divisible by d, return true
 	{
 		return true;
 	}
